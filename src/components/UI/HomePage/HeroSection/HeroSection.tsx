@@ -39,7 +39,7 @@ const HeroSection = () => {
             textAlign: { xs: "center", md: "left" },
             position: "relative",
             zIndex: 1,
-            py: 8
+            py: 6,
           }}
         >
           <Box
