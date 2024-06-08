@@ -11,6 +11,7 @@ const AboutUs = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          py: 6,
           mb: 5,
           margin: "0 auto",
         }}
