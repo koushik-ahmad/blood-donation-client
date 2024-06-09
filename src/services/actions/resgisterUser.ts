@@ -8,7 +8,7 @@ export const registerUser = async (values: FieldValues) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(values),
-    // cache: "no-store",
+    cache: "no-store",
   });
 
   const data = await res.json();

@@ -1,3 +1,14 @@
+export const BloodTypes: string[] = [
+  "A_POSITIVE",
+  "A_NEGATIVE",
+  "B_POSITIVE",
+  "B_NEGATIVE",
+  "AB_POSITIVE",
+  "AB_NEGATIVE",
+  "O_POSITIVE",
+  "O_NEGATIVE",
+];
+
 export const Cities = [
   { name: "Barishal", latitude: 22.701, longitude: 90.3535 },
   { name: "Bhola", latitude: 22.687, longitude: 90.6446 },

@@ -1,7 +1,6 @@
 "use client";
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import assets from "@/assets";
 import Link from "next/link";
 import logo from "@/assets/icons/logo2.png";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
