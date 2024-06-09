@@ -12,65 +12,104 @@ import Image from "next/image";
 import logo from "@/assets/icons/logo2.png";
 import Link from "next/link";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
-import { modifyPayload } from "@/utils/modifyPayload";
-import { registerPatient } from "@/services/actions/registerPatient";
+import { modifyPayload } from "@/utils/modityPayload";
+import { registerUser } from "@/services/actions/resgisterUser";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { userLogin } from "@/services/actions/userLogin";
 import { storeUserInfo } from "@/services/auth.services";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { BloodGroups } from "@/types";
+import { z } from "zod";
+import defaultValues from "./page";
 import PHForm from "@/components/Forms/PHForm";
 import PHInput from "@/components/Forms/PHInput";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import PHSelectField from "@/components/Forms/PHSelectField";
+import PHDatePicker from "@/components/Forms/PHDatePicker";
 
-// export const validationSchema = z.object({
-//   name: z.string().min(1, "Please enter your name!"),
-//   email: z.string().email("Please enter a valid email address!"),
-//   password: z.string().min(6, "Must be at least 6 characters"),
-//   bloodTYpe: z.string().min(1, "Please enter your Blood Group!"),
-//   location: z.string().min(1, "Please enter your location!"),
-//   age: z.string().min(1, "Please enter your age!"),
-//   bio: z.string().min(1, "Please enter your bio!"),
-//   lastDonationDate: z.string().min(1, "Please enter your lastDonationDate!"),
+// const registerFormSchema = z.object({
+//   name: z.string({ required_error: "Name is required" }),
+//   email: z.string({ required_error: "Email is required" }).email({ message: "Invalid Email" }),
+//   password: z
+//     .string({ required_error: "Password is required" })
+//     .min(6, { message: "Password must be at least 6 characters" }),
+//   confirmPassword: z
+//     .string({ required_error: "Please type your password again" })
+//     .min(6, "Your password should be minimum 6 characters"),
+//   bloodType: z
+//     .string({ required_error: "Blood type is required" })
+//     .optional(),
+//   location: z.string({ required_error: "Location is required" }),
+//   bio: z.string({ required_error: "Bio is required" }),
+//   contactNumber: z.string({ required_error: "Phone Number is required" }),
+//   age: z.string({ required_error: "Age is required" }),
+//   lastDonationDate: z
+//     .any({ required_error: "Last donation date is required" })
+//     .optional(),
 // });
-
-// export const validationSchema = z.object({
-//   password: z.string().min(6, "Must be at least 6 characters"),
-//   patient: userValidationSchema,
-// });
-
-// export const defaultValues = {
-//   name: "",
-//   email: "",
-//   password: "",
-//   contactNumber: "",
-//   address: "",
-// };
 
 const RegisterPage = () => {
+  // const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleRegister = async (values: FieldValues) => {
-    const data = modifyPayload(values);
-    // console.log(data);
-    try {
-      const res = await registerPatient(data);
-      // console.log(res);
+
+  const handleRegister = async (values: any) => {
+    // const data = modifyPayload(values);
+    // console.log(values);
+
+    const password = values.password;
+    const confirmPassword = values.confirmPassword;
+
+    if (password !== confirmPassword) {
+      return toast.error("Passwords do not match!");
+    }
+
+    const modifiedValues = {
+      ...values,
+      age: parseInt(values.age),
+    };
+
+    console.log(modifiedValues)
+
+     try {
+      const res = await registerUser(modifiedValues);
+      console.log(res);
+
+      if(res.success === false){
+        toast.error("validation error");
+      };
+
       if (res?.data?.id) {
         toast.success(res?.message);
         const result = await userLogin({
           password: values.password,
-          email: values.patient.email,
+          email: values.email,
         });
-        if (result?.data?.accessToken) {
-          storeUserInfo({ accessToken: result?.data?.accessToken });
-          router.push("/dashboard");
+        if (result?.data?.token) {
+          storeUserInfo({ accessToken: result?.data?.token });
+          router.push("/");
         }
       }
     } catch (err: any) {
-      console.error(err.message);
+      toast.error("Validation Error!!");
+      console.error(err);
     }
   };
+
+  // const defaultValues = {
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  //   confirmPassword: "",
+  //   bloodType: "",
+  //   location: "",
+  //   bio: "",
+  //   contactNumber: "",
+  //   age: "",
+  //   lastDonationDate: "",
+  // };
 
   return (
     <Container>
@@ -102,7 +141,7 @@ const RegisterPage = () => {
             </Box>
             <Box>
               <Typography variant="h6" fontWeight={600}>
-                Patient Register
+                BLOOD CARE REGISTER
               </Typography>
             </Box>
           </Stack>
@@ -110,19 +149,19 @@ const RegisterPage = () => {
           <Box>
             <PHForm
               onSubmit={handleRegister}
-              resolver={zodResolver(validationSchema)}
-              defaultValues={defaultValues}
+              // resolver={zodResolver(registerFormSchema)}
+              // defaultValues={defaultValues}
             >
               <Grid container spacing={2} my={1}>
                 <Grid item md={12}>
-                  <PHInput label="Name" fullWidth={true} name="patient.name" />
+                  <PHInput label="Name" fullWidth={true} name="name" />
                 </Grid>
-                <Grid item md={6}>
+                <Grid item md={12}>
                   <PHInput
                     label="Email"
                     type="email"
                     fullWidth={true}
-                    name="patient.email"
+                    name="email"
                   />
                 </Grid>
                 <Grid item md={6}>
@@ -135,17 +174,38 @@ const RegisterPage = () => {
                 </Grid>
                 <Grid item md={6}>
                   <PHInput
-                    label="Contact Number"
-                    type="tel"
+                    label="Confirm Password"
+                    type="password"
                     fullWidth={true}
-                    name="patient.contactNumber"
+                    name="confirmPassword"
                   />
                 </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                  <PHSelectField
+                    items={BloodGroups}
+                    name="bloodType"
+                    label="Blood Type"
+                    sx={{ mb: 2 }}
+                    fullWidth
+                  />
+                </Grid>
+
                 <Grid item md={6}>
-                  <PHInput
-                    label="Address"
-                    fullWidth={true}
-                    name="patient.address"
+                  <PHInput label="Location" fullWidth={true} name="location" />
+                </Grid>
+                <Grid item md={6}>
+                  <PHInput label="Bio" fullWidth={true} name="bio" />
+                </Grid>
+                <Grid item md={6}>
+                  <PHInput label="Phone" type="tel" fullWidth={true} name="contactNumber" />
+                </Grid>
+                <Grid item md={6}>
+                  <PHInput label="Age" fullWidth={true} name="age" />
+                </Grid>
+                <Grid item md={6}>
+                  <PHDatePicker
+                    name="lastDonationDate"
+                    label="Last Donation Date"
                   />
                 </Grid>
               </Grid>
