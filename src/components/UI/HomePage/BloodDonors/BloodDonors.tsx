@@ -4,6 +4,7 @@ import {
   TextField,
   Typography,
   Box,
+  Button,
   Container,
   MenuItem,
   Select,
@@ -46,6 +47,10 @@ const BloodDonors: React.FC = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  // limit donors to display
+  const limit = 6;
+  const displayedDonors = filteredDonors.slice(0, limit);
 
   return (
     <Box
@@ -167,7 +172,7 @@ const BloodDonors: React.FC = () => {
             borderRadius: 8,
           }}
         >
-          {filteredDonors?.map((donor) => (
+          {displayedDonors?.map((donor) => (
             <DonorCard key={donor.id} donor={donor} />
           ))}
         </Box>
@@ -178,6 +183,11 @@ const BloodDonors: React.FC = () => {
           </Box>
         )}
       </Container>
+       <Box sx={{ textAlign: "center", mt: "2rem" }}>
+        <Button href='/donors'>
+          View All Donor
+        </Button>
+      </Box>
     </Box>
   );
 };
