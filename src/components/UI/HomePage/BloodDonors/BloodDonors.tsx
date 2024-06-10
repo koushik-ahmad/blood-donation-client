@@ -15,6 +15,8 @@ import { useGetAllDonorsQuery } from "@/redux/api/donorApi";
 import React, { useState, useEffect } from "react";
 import DonorCard from "@/components/UI/Donor/DonorCard";
 import { IDonor } from "@/types";
+import Spinner from "../../Spinner/Spinner";
+import Link from "next/link";
 
 const BloodDonors: React.FC = () => {
   const [filteredDonors, setFilteredDonors] = useState<IDonor[]>([]);
@@ -45,7 +47,11 @@ const BloodDonors: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   // limit donors to display
@@ -183,10 +189,8 @@ const BloodDonors: React.FC = () => {
           </Box>
         )}
       </Container>
-       <Box sx={{ textAlign: "center", mt: "2rem" }}>
-        <Button href='/donors'>
-          View All Donor
-        </Button>
+      <Box sx={{ textAlign: "center", mt: "2rem" }}>
+        <Button component={Link} href="/donors">View All Donor</Button>
       </Box>
     </Box>
   );

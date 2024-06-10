@@ -2,6 +2,7 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import about from "@/assets/images/blood3.png";
 import Divider from '@mui/material/Divider';
+import Link from "next/link";
 
 const AboutUs = () => {
   return (
@@ -50,6 +51,7 @@ const AboutUs = () => {
             </Typography>
             <Box mt={4}>
               <Button
+                component={Link}
                 variant="contained"
                 color="primary"
                 href="/about"

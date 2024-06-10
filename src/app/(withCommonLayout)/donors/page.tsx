@@ -17,6 +17,7 @@ import DonorCard from "@/components/UI/Donor/DonorCard";
 import { IDonor } from "@/types";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Spinner from "@/components/UI/Spinner/Spinner";
 
 const BloodDonors: React.FC = () => {
   const [filteredDonors, setFilteredDonors] = useState<IDonor[]>([]);
@@ -26,7 +27,7 @@ const BloodDonors: React.FC = () => {
 
   // pagination
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(8); 
+  const [pageSize] = useState(8);
   const { data, isLoading, error } = useGetAllDonorsQuery({});
 
   useEffect(() => {
@@ -53,14 +54,17 @@ const BloodDonors: React.FC = () => {
     setPage(newPage);
   };
 
- const startIndex = (page - 1) * pageSize;
- const endIndex = startIndex + pageSize;
- const paginatedDonors = filteredDonors.slice(startIndex, endIndex);
- const totalPages = Math.ceil(filteredDonors.length / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedDonors = filteredDonors.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredDonors.length / pageSize);
 
- 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   return (
