@@ -20,9 +20,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import logo from "@/assets/icons/logo2.png";
 import { useState } from "react";
+import { logoutUser } from "@/services/actions/logoutUser";
+import useUserInfo from "@/hooks/useUserInfo";
 
 const Navbar = () => {
+  const userInfo = useUserInfo();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+   const handleLogOut = () => {
+    logoutUser(router);
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -52,7 +60,7 @@ const Navbar = () => {
         </ListItem>
 
         <>
-          <ListItem>
+          <ListItem onClick={handleLogOut}>
             <ListItemText primary="Logout" />
           </ListItem>
         </>
@@ -167,7 +175,7 @@ const Navbar = () => {
           >
             Login
           </Button>
-          <Button color="error" sx={{ boxShadow: 0 }}>
+          <Button onClick={handleLogOut} color="error" sx={{ boxShadow: 0 }}>
             Logout
           </Button>
           </Stack>

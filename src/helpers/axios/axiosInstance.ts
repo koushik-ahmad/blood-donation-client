@@ -1,4 +1,4 @@
-import { authKey } from "@/constants/authkey";
+import { authKey } from "@/constants/authKey";
 import setAccessToken from "@/services/actions/setAccessToken";
 import { getNewAccessToken } from "@/services/auth.services";
 import { IGenericErrorResponse, ResponseSuccessType } from "@/types";
