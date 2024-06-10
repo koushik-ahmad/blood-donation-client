@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import {
   TextField,
@@ -12,15 +13,15 @@ import {
 import { useGetAllDonorsQuery } from "@/redux/api/donorApi";
 import React, { useState, useEffect } from "react";
 import DonorCard from "@/components/UI/Donor/DonorCard";
-import { IDonor } from "@/types/donor";
+import { IDonor } from "@/types";
 
 const BloodDonors: React.FC = () => {
   const [filteredDonors, setFilteredDonors] = useState<IDonor[]>([]);
-  const [defaultLocation, setDefaultLocation] = useState("Dhaka");
+  const [defaultLocation, setDefaultLocation] = useState("");
   const [bloodType, setBloodType] = useState("");
   const [name, setName] = useState("");
 
-  const { data, isLoading } = useGetAllDonorsQuery({});
+  const { data, isLoading, error } = useGetAllDonorsQuery({});
 
   useEffect(() => {
     if (data && data.donors) {
@@ -42,17 +43,21 @@ const BloodDonors: React.FC = () => {
     setFilteredDonors(filtered || []);
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Box
       sx={{
-        backgroundImage: "linear-gradient(to bottom, tomato, #ffffff)",
-        py: 5,
+        backgroundImage: "#ffffff)",
+        pb: 5,
       }}
     >
       <Container maxWidth="lg">
         <Typography
-          variant="h3"
-          color={"white"}
+          variant="h5"
+          color={"black"}
           textAlign={"center"}
           sx={{
             textAlign: "center",
@@ -61,11 +66,11 @@ const BloodDonors: React.FC = () => {
               xs: "32px",
               sm: "32px",
               md: "32px",
-              lg: "48px",
+              lg: "40px",
             },
           }}
         >
-          Filtered Donors
+          Blood Donors
         </Typography>
         <Box
           sx={{
@@ -76,70 +81,76 @@ const BloodDonors: React.FC = () => {
             flexDirection: {
               xs: "column",
               sm: "column",
-              md: "column",
+              md: "row",
               lg: "row",
             },
             width: {
               xs: "100%",
               sm: "100%",
-              md: "100%",
-              lg: "80%",
+              md: "96%",
+              lg: "96%",
             },
+            gap: "10px",
           }}
         >
-          <FormControl sx={{ width: {
-              xs: "100%",
-              sm: "100%",
-              md: "100%",
-              lg: "30%",
-            }, marginBottom: 2 }}>
-            <InputLabel>Blood Type</InputLabel>
-            <Select
-              value={bloodType}
-              label="Blood Type"
-              onChange={(e) => setBloodType(e.target.value)}
-            >
-              <MenuItem value=""></MenuItem>
-              <MenuItem value={"A_POSITIVE"}>A+</MenuItem>
-              <MenuItem value={"A_NEGATIVE"}>A-</MenuItem>
-              <MenuItem value={"B_POSITIVE"}>B+</MenuItem>
-              <MenuItem value={"B_NEGATIVE"}>B-</MenuItem>
-              <MenuItem value={"AB_POSITIVE"}>AB+</MenuItem>
-              <MenuItem value={"AB_NEGATIVE"}>AB-</MenuItem>
-              <MenuItem value={"O_POSITIVE"}>O+</MenuItem>
-              <MenuItem value={"O_NEGATIVE"}>O-</MenuItem>
-            </Select>
-          </FormControl>
           <TextField
             type="text"
-            label="Enter name"
+            label="Search Donor Name"
             variant="outlined"
-            value={name}
             onChange={(e) => setName(e.target.value)}
             sx={{
               width: {
                 xs: "100%",
                 sm: "100%",
                 md: "100%",
-                lg: "30%",
-              }, marginBottom: 2
+                lg: "100%",
+              },
+              marginBottom: 2,
             }}
           />
           <TextField
             type="text"
             label="Enter location"
             variant="outlined"
-            defaultValue={defaultLocation}
             onChange={(e) => setDefaultLocation(e.target.value)}
             sx={{
               width: {
                 xs: "100%",
                 sm: "100%",
-                md: "100%",
+                md: "30%",
                 lg: "30%",
-              }, marginBottom: 5
+              },
+              marginBottom: 2,
             }}
           />
+          <FormControl
+            sx={{
+              width: {
+                xs: "100%",
+                sm: "100%",
+                md: "30%",
+                lg: "30%",
+              },
+              marginBottom: 2,
+            }}
+          >
+            <InputLabel>Blood Type</InputLabel>
+            <Select
+              value={bloodType}
+              label="Blood Type"
+              onChange={(e) => setBloodType(e.target.value)}
+            >
+              <MenuItem value="">Any Type</MenuItem>
+              <MenuItem value={"A_POSITIVE"}>A+ POSITIVE</MenuItem>
+              <MenuItem value={"A_NEGATIVE"}>A- NEGATIVE</MenuItem>
+              <MenuItem value={"B_POSITIVE"}>B+ POSITIVE</MenuItem>
+              <MenuItem value={"B_NEGATIVE"}>B- NEGATIVE</MenuItem>
+              <MenuItem value={"AB_POSITIVE"}>AB+ POSITIVE</MenuItem>
+              <MenuItem value={"AB_NEGATIVE"}>AB- NEGATIVE</MenuItem>
+              <MenuItem value={"O_POSITIVE"}>O+ POSITIVE</MenuItem>
+              <MenuItem value={"O_NEGATIVE"}>O- NEGATIVE</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
 
         <Box
@@ -160,6 +171,12 @@ const BloodDonors: React.FC = () => {
             <DonorCard key={donor.id} donor={donor} />
           ))}
         </Box>
+        {filteredDonors?.length === 0 && (
+          <Box sx={{ textAlign: "center", my: 10, color: "red" }}>
+            <Typography variant="h5">No Donors Found.</Typography>
+            <Typography>Please, try again!</Typography>
+          </Box>
+        )}
       </Container>
     </Box>
   );

@@ -1,6 +1,7 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import about from "@/assets/images/blood3.png";
+import Divider from '@mui/material/Divider';
 
 const AboutUs = () => {
   return (
@@ -60,6 +61,7 @@ const AboutUs = () => {
           </Grid>
         </Grid>
       </Box>
+      <Divider/>
     </>
   );
 };

@@ -20,7 +20,7 @@ const TopDonors = async () => {
             xs: "32px",
             sm: "32px",
             md: "32px",
-            lg: "48px",
+            lg: "40px",
           },
         }}
       >
