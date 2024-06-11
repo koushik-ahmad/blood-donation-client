@@ -37,7 +37,6 @@ export default function PHFullScreenModal({
   return (
     <React.Fragment>
       <BootstrapDialog
-        fullScreen
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
