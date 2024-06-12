@@ -4,18 +4,23 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Box, Container, Typography } from "@mui/material";
 import { Cities } from "@/constants";
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
+import { useEffect } from "react";
 
 const CoverageArea = () => {
-  return (
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+        iconUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        shadowUrl:
+          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      });
+    }
+  }, []);
+
+return (
  <Container>
      <Box sx={{ height: "700px", width: "100%", my: "20px",}}>
       <Typography

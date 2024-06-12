@@ -14,6 +14,7 @@ import { Avatar, Badge, Stack } from "@mui/material";
 import AccountMenu from "../AccountMenu/AccountMenu";
 import avatar from "@/assets/images/avatar.png";
 import { useGetMYProfileQuery } from "@/redux/api/myProfile";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -77,19 +78,11 @@ export default function DashboardDrawer({
           >
             <Box>
               <Typography
-                variant="body2"
-                noWrap
-                component="div"
-                sx={{ color: "rgba(11, 17, 52, 0.6)" }}
-              >
-                Hi, {isLoading ? "Loading..." : data?.name},
-              </Typography>
-              <Typography
                 variant="h6"
                 noWrap
                 component="div"
                 sx={{
-                  color: "primary.main",
+                  color: "black",
                   fontSize: {
                     sm: "16px",
                     md: "16px",
@@ -104,7 +97,12 @@ export default function DashboardDrawer({
                   textWrap: "wrap",
                 }}
               >
-                Welcome to Blood Donation App
+                <Link component={Link} href="/" >
+                <Box component="span" color="red">
+                  BlOOD
+                </Box>{" "}
+                 CARE
+                </Link>
               </Typography>
             </Box>
             <Stack direction="row" gap={3}>

@@ -7,6 +7,7 @@ import { Button, Grid } from "@mui/material";
 import PHSelectField from "@/components/Forms/PHSelectField";
 import { RequestStatus } from "@/types";
 import { z } from "zod";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import PHModal from "@/components/Shared/PHModal/PHModal";
 import { useUpdateRequestStatusMutation } from "@/redux/api/requestApi";
@@ -33,16 +34,18 @@ const UpdateRequestStatusModal = ({ open, setOpen, id }: TProps) => {
     try {
       const res = await updateRequest(payload);
       setOpen(false);
+      toast.success("Status updated successfully")
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong!")
     }
   };
 
   return (
     <PHModal open={open} setOpen={setOpen} title="Update Request Status">
       <PHForm onSubmit={submitHandler} resolver={zodResolver(validationSchema)}>
-        <Grid container spacing={2} sx={{ my: 5 }}>
-          <Grid item xs={12} sm={12} md={6}>
+        <Grid container spacing={1} sx={{ my: 4 }}>
+          <Grid item xs={12} sm={12} md={12}>
             <PHSelectField
               items={RequestStatus}
               name="status"
@@ -53,10 +56,9 @@ const UpdateRequestStatusModal = ({ open, setOpen, id }: TProps) => {
           </Grid>
         </Grid>
 
-        <Button type="submit" disabled={updating}>
+        <Button type="submit" fullWidth disabled={updating}>
           Update Request
         </Button>
-        {/* <Button type="submit">Update Request</Button> */}
       </PHForm>
     </PHModal>
   );

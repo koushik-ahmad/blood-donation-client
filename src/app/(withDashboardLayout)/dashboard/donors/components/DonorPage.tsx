@@ -160,7 +160,7 @@ const DonorPage = () => {
         )}
 
         <Box
-          mt={2}
+          mt={5}
           display="flex"
           justifyContent="center"
           alignItems="center"

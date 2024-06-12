@@ -8,12 +8,12 @@ interface ConfirmationModalProps {
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, onConfirm }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} >
       <DialogTitle my={2}>Confirm Deletion</DialogTitle>
       <DialogContent>
-        <DialogContentText>Are you sure you want to delete this donor?</DialogContentText>
+        <DialogContentText>Are you sure you want to delete this item?</DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{m: "8px"}}> 
         <Button onClick={onClose} variant="outlined">
           Cancel
         </Button>

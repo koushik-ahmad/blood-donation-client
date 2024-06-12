@@ -1,120 +1,182 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { 
+  Box, 
+  Container,
+  Grid, 
+  Typography 
+} from "@mui/material";
+import Image from "next/image";
 
 const DonorInformation = ({ data }: any) => {
+  // console.log(data);
   return (
     <>
-      <Typography variant="h5" color="primary.main" mb={2}>
-        Personal Information for {data?.name || "Donors"}.
-      </Typography>
+      <Box sx={{ pt: "15px" }}>
+        <Container
+          maxWidth="md"
+          sx={{
+            backgroundColor: "#f5f5f5",
+            height: "50%",
+            borderRadius: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Grid container spacing={2}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Name</Typography>
+              <Typography variant="body1">{data?.name}</Typography>
+            </Grid>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography color="secondary" variant="caption">
-              Name
-            </Typography>
-            <Typography>{data?.name}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography color="secondary" variant="caption">
-              Email
-            </Typography>
-            <Typography>{data?.email}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography color="secondary" variant="caption">
-              Blood Group
-            </Typography>
-            <Typography>{data?.bloodType}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography color="secondary" variant="caption">
-              Total Donation
-            </Typography>
-            <Typography>{data?.totalDonations}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Location
-            </Typography>
-            <Typography>{data?.location}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              City
-            </Typography>
-            <Typography>{data?.city || "Not Given"}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Age
-            </Typography>
-            <Typography>{data?.userProfile?.age} Years</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Last Donation Date
-            </Typography>
-            <Typography>{data?.userProfile?.lastDonationDate}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Bio
-            </Typography>
-            <Typography>{data?.userProfile?.bio}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Joined
-            </Typography>
-            <Typography>
-              {data
-                ? new Date(data.createdAt).toLocaleDateString("en-US", {
-                    month: "2-digit",
-                    day: "2-digit",
-                    year: "2-digit",
-                  })
-                : null}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Current Status
-            </Typography>
-            <Typography>{data?.status || "Active"}</Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Box sx={{ backgroundColor: "#f4f7fe", p: 2 }}>
-            <Typography variant="caption" color="secondary">
-              Contact Number
-            </Typography>
-            <Typography>
-              {data?.userProfile?.contactNumber || "Not set"}
-            </Typography>
-          </Box>
-        </Grid>
-      </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Email</Typography>
+              <Typography variant="body1">{data?.email}</Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Blood Type</Typography>
+              <Typography variant="body1">{data?.bloodType}</Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Total Donates</Typography>
+              <Typography variant="body1">
+                {data?.totalDonations || "N/A"} times
+              </Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Location</Typography>
+              <Typography variant="body1">{data?.location}</Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Age</Typography>
+              <Typography variant="body1">{data?.userProfile?.age} Years</Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Availability</Typography>
+              <Typography variant="body1">
+                {data?.status || "false"}
+              </Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Last Donation Date</Typography>
+              <Typography variant="body1">
+                {data?.userProfile?.lastDonationDate}
+              </Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Current Status</Typography>
+              <Typography variant="body1">
+                {data?.status || "Active"}
+              </Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Contact Number</Typography>
+              <Typography variant="body1"> {data?.userProfile?.contactNumber || "Not set"}</Typography>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Bio</Typography>
+              <Typography variant="body1"> {data?.userProfile?.bio || "Not Set"}</Typography>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
     </>
   );
 };

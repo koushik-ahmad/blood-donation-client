@@ -40,16 +40,16 @@ const MyDonationRequests = () => {
         <Typography
           variant="h3"
           sx={{
-            mt: 5,
+            mt: 2,
             mb: 3,
             textAlign: "center",
             fontSize: {
               xs: "20px",
               sm: "20px",
               md: "24px",
-              lg: "32px",
+              lg: "24px",
             },
-            color: "primary.main",
+            color: "red",
           }}
         >
           My Donation Requests
@@ -96,7 +96,7 @@ const MyDonationRequests = () => {
                   }}
                 >
                   <Button
-                    size="small"
+                    fullWidth
                     endIcon={<ModeEditIcon />}
                     onClick={() => handleOpenModal(item?.id)}
                   >

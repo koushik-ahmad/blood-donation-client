@@ -101,7 +101,7 @@ const UpdateRequestMadeByMeModal = ({ open, setOpen, id, data }: TProps) => {
           </Grid>
         </Grid>
 
-        <Button type="submit" disabled={updating}>
+        <Button type="submit" fullWidth disabled={updating}>
           Update My Request
         </Button>
       </PHForm>

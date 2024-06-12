@@ -26,15 +26,9 @@ const validationSchema = z.object({
     (x) => (x ? x : undefined),
     z.coerce.number().int().optional()
   ),
-  totalDonations: z.preprocess(
-    (x) => (x ? x : undefined),
-    z.coerce.number().int().optional()
-  ),
-
   name: z.string().optional(),
   email: z.string().optional(),
   location: z.string().optional(),
-  city: z.string().optional(),
   bio: z.string().optional(),
   lastDonationDate: z.string().optional(),
   bloodType: z.string().optional(),
@@ -48,9 +42,7 @@ const ProfileUpdateModal = ({ open, setOpen, id }: TProps) => {
     id: userData?.id,
     name: userData?.name,
     email: userData?.email,
-    totalDonations: userData?.totalDonations,
     location: userData?.location,
-    city: userData?.city,
     bloodType: userData?.bloodType,
     age: userData?.userProfile?.age,
     bio: userData?.userProfile?.bio,
@@ -65,6 +57,7 @@ const ProfileUpdateModal = ({ open, setOpen, id }: TProps) => {
       const res = await updateProfile(values);
       await refetch();
       setOpen(false);
+      toast.success("Profile updated Successfully")
     } catch (error) {
       toast.error("Something went wrong!!! Please try again later");
       console.log(error);
@@ -102,23 +95,11 @@ const ProfileUpdateModal = ({ open, setOpen, id }: TProps) => {
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
             <PHInput
-              name="totalDonations"
-              type="number"
-              label="Total Donations"
-              sx={{ mb: 2 }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <PHInput
               name="location"
               label="Location"
               sx={{ mb: 2 }}
               fullWidth
             />
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <PHInput name="city" label="City" sx={{ mb: 2 }} fullWidth />
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
             <PHInput name="bio" label="Bio" sx={{ mb: 2 }} fullWidth />
@@ -142,7 +123,6 @@ const ProfileUpdateModal = ({ open, setOpen, id }: TProps) => {
           </Grid>
 
           <Grid item md={6}>
-            {/* <PHDatePicker name="lastDonationDate" label="Last Donation Date" /> */}
             <PHInput
               name="lastDonationDate"
               type="text"
@@ -153,7 +133,7 @@ const ProfileUpdateModal = ({ open, setOpen, id }: TProps) => {
           </Grid>
         </Grid>
 
-        <Button type="submit" disabled={updating}>
+        <Button type="submit" fullWidth disabled={updating}>
           Update
         </Button>
       </PHForm>

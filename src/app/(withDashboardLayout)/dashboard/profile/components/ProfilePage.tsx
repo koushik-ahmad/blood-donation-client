@@ -4,10 +4,10 @@ import {
   useGetMYProfileQuery,
   useUpdateProfilePictureMutation,
 } from "@/redux/api/myProfile";
-import { Box, Button, Container } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import { Box, Button, Container, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AutoFileUploader from "@/components/Forms/AutoFileUploader";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
@@ -18,6 +18,8 @@ import ProfileUpdateModal from "./ProfileUpdateModal";
 import DonorInformation from "./DonorInformations";
 import MyDonationRequests from "./MyDonationRequests";
 import DonationRequestsMadeByMe from "./DonationRequestsMadeByMe";
+import Divider from '@mui/material/Divider';
+import Spinner from "@/components/UI/Spinner/Spinner";
 
 const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,105 +42,119 @@ const ProfilePage = () => {
       .then((result) => {
         if (result.success) {
           const image = result.data.url;
-          // console.log("Image = ", image);
           const profileUpdate = {
             id: data?.id,
             profilePicture: image,
           };
-          const picture = updateProfilePicture(profileUpdate);
-          // console.log("Picture = ", picture);
-          picture
+          updateProfilePicture(profileUpdate)
             .then((resolvedValue) => {
               console.log("resolvedValue = ", resolvedValue);
-              toast.success("Profile Picture uploaded successfully");
+              toast.success("Picture uploaded successfully");
             })
             .catch((error) => {
-              toast.error("Failed to upload the profile picture.");
+              toast.error("Failed to upload the picture!");
             });
         }
       });
   };
 
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+  }, [isLoading]);
+
   if (isLoading) {
-    <p>Loading...</p>;
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
   return (
-    <>
+    <Grid container spacing={2} sx={{ paddingY: "1rem" }}>
       <ProfileUpdateModal
         open={isModalOpen}
         setOpen={setIsModalOpen}
         id={data?.id}
       />
-      <Container sx={{ mt: 4 }}>
-        <Grid
-          container
-          spacing={4}
+      <Grid
+        item
+        xs={12}
+        md={4}
+        sx={{
+          backgroundColor: "#f5f5f5",
+          padding: "1rem",
+          height: "100%",
+          borderRadius: "1rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
           sx={{
-            mb: {
-              xs: 5,
-              sm: 5,
-              md: 10,
-            },
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            maxHeight: 500,
+            width: "100%",
+            overflow: "hidden",
+            borderRadius: 1,
           }}
         >
-          <Grid xs={12} md={4}>
-            <Box
-              sx={{
-                height: {
-                  lg: "100%",
-                  xl: "100%",
-                },
-                maxHeight: 500,
-                width: "100%",
-                overflow: "hidden",
-                borderRadius: 1,
-              }}
-            >
-              <Image
-                height={450}
-                width={400}
-                src={data?.profilePicture ? data?.profilePicture : avatar}
-                alt="User Photo"
-              />
-            </Box>
-            <Box my={3}>
-              {updating ? (
-                <p>Uploading...</p>
-              ) : (
-                <AutoFileUploader
-                  name="file"
-                  label="Choose Your Profile Photo"
-                  icon={<CloudUploadIcon />}
-                  onFileUpload={fileUploadHandler}
-                  variant="text"
-                />
-              )}
-            </Box>
+          <Image
+            height={250}
+            width={200}
+            src={data?.profilePicture ? data?.profilePicture : avatar}
+            alt="User Photo"
+            style={{ borderRadius: "50%", objectFit: "cover" }}
+          />
 
+          <Box gap={2} sx={{ marginTop: "1rem", textAlign: "center" }}>
+            {updating ? (
+              <Typography>Uploading...</Typography>
+            ) : (
+              <AutoFileUploader
+                name="file"
+                label="Upload Photo"
+                icon={<CloudUploadIcon />}
+                onFileUpload={fileUploadHandler}
+                variant="text"
+              />
+            )}
             <Button
-              fullWidth
               endIcon={<ModeEditIcon />}
               onClick={() => setIsModalOpen(true)}
             >
               Edit Profile
             </Button>
-          </Grid>
-          <Grid xs={12} md={8}>
+          </Box>
+        </Box>
+
+        {/* profile information here  */}
+        <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
+          <Grid item xs={12}>
             <DonorInformation data={data} />
-            {/* <DonorInformation /> */}
           </Grid>
         </Grid>
-        <DashedLine />
-        <Grid xs={12} md={8}>
+      </Grid>
+
+      {/* Donar request here */}
+      <Grid item xs={12} md={8} >
+        <Grid item xs={12} mb={4}>
           <MyDonationRequests />
         </Grid>
-        <DashedLine />
-        <Grid xs={12} md={8}>
+
+         <Divider/>
+        <Grid item xs={12}>
           <DonationRequestsMadeByMe />
         </Grid>
-      </Container>
-    </>
+      </Grid>
+    </Grid>
   );
 };
 

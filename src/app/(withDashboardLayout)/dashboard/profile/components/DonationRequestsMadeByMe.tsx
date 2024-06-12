@@ -17,36 +17,54 @@ import { miniSerializeError } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 import UpdateRequestMadeByMeModal from "./updateRequestMadeByMeModal";
 import { useDeleteMyRequestMutation } from "@/redux/api/requestApi";
+import Spinner from "@/components/UI/Spinner/Spinner";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const DonationRequestsMadeByMe = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
   const { data, isLoading } = useDonationRequestsMadeByMeQuery({});
   const [deleteMyRequest] = useDeleteMyRequestMutation();
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
 
   const handleOpenModal = (id: string) => {
     setSelectedId(id);
     setIsModalOpen(true);
   };
 
+  const handleOpenConfirmModal = (id: string) => {
+    setSelectedId(id);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleCloseConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    setSelectedId(null);
+  };
+
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this request?"
-    );
-    if (!confirmed) return;
+   if (!id) return;
     try {
       const result = await deleteMyRequest(id);
       if (result) {
         toast.success("Request deleted successfully");
+        handleCloseConfirmModal();
       }
     } catch (error) {
       toast.error("Failed to delete request");
     }
   };
+
+
+  if (isLoading) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -62,16 +80,16 @@ const DonationRequestsMadeByMe = () => {
         <Typography
           variant="h3"
           sx={{
-            mt: 5,
+            mt: 3,
             mb: 3,
             textAlign: "center",
             fontSize: {
               xs: "20px",
               sm: "20px",
               md: "24px",
-              lg: "32px",
+              lg: "24px",
             },
-            color: "primary.main",
+            color: "red",
           }}
         >
           Donation Requests Made By Me
@@ -125,7 +143,7 @@ const DonationRequestsMadeByMe = () => {
                   }}
                 >
                   <Button
-                    fullWidth
+                    variant="outlined"
                     endIcon={<ModeEditIcon />}
                     onClick={() => handleOpenModal(item?.id)}
                     sx={{ mb: { xs: 1, sm: 1, md: 0 } }} // Add margin bottom for small devices
@@ -133,9 +151,9 @@ const DonationRequestsMadeByMe = () => {
                     Update
                   </Button>
                   <Button
-                    fullWidth
+                    variant="outlined"
                     color="error"
-                    onClick={() => handleDelete(item?.id)}
+                    onClick={() => handleOpenConfirmModal(item?.id)}
                     endIcon={<DeleteForeverIcon />}
                   >
                     Delete
@@ -146,6 +164,12 @@ const DonationRequestsMadeByMe = () => {
           ))}
         </Grid>
       </Container>
+      <ConfirmDeleteModal
+        open={isConfirmModalOpen}
+        handleClose={handleCloseConfirmModal}
+        handleConfirm={handleDelete}
+        id={selectedId}
+      />
     </>
   );
 };
