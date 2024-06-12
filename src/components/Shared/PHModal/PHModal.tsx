@@ -42,7 +42,6 @@ export default function PHModal({
         aria-labelledby="customized-dialog-title"
         open={open}
         maxWidth="md"
-        fullWidth
         sx={{
           "& .MuiDialog-paper": {
             minWidth: "500px",

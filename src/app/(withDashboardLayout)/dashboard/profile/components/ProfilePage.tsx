@@ -13,13 +13,11 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { toast } from "sonner";
 import avatar from "@/assets/images/avatar.png";
-// import DashedLine from "@/components/UI/Donor/DashedLine";
-import Divider from '@mui/material/Divider';
+import DashedLine from "@/components/UI/Donor/DashedLine";
 import ProfileUpdateModal from "./ProfileUpdateModal";
 import DonorInformation from "./DonorInformations";
 import MyDonationRequests from "./MyDonationRequests";
 import DonationRequestsMadeByMe from "./DonationRequestsMadeByMe";
-
 
 const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +28,7 @@ const ProfilePage = () => {
     useUpdateProfilePictureMutation();
 
   const fileUploadHandler = (file: File) => {
-    const imgBBLink = "4fb1911cd7fea07ca539c23c89d490db";
+    const imgBBLink = "7b9639cdc6a2cd14a6d5cbbaaf7a0c5c";
     const formData = new FormData();
     formData.append("image", file);
     const url = `https://api.imgbb.com/1/upload?key=${imgBBLink}`;
@@ -52,12 +50,10 @@ const ProfilePage = () => {
           picture
             .then((resolvedValue) => {
               console.log("resolvedValue = ", resolvedValue);
-              toast.success("Photo uploaded successfully");
+              toast.success("Profile Picture uploaded successfully");
             })
             .catch((error) => {
-              toast.error(
-                "Failed to upload. Please try again."
-              );
+              toast.error("Failed to upload the profile picture.");
             });
         }
       });
@@ -67,7 +63,6 @@ const ProfilePage = () => {
     <p>Loading...</p>;
   }
 
-  // const placeholder = "https://i.ibb.co/C9R8GrS/IMG-20200803-183036.jpg";
   return (
     <>
       <ProfileUpdateModal
@@ -131,13 +126,14 @@ const ProfilePage = () => {
           </Grid>
           <Grid xs={12} md={8}>
             <DonorInformation data={data} />
+            {/* <DonorInformation /> */}
           </Grid>
         </Grid>
-        <Divider />
+        <DashedLine />
         <Grid xs={12} md={8}>
           <MyDonationRequests />
         </Grid>
-        <Divider />
+        <DashedLine />
         <Grid xs={12} md={8}>
           <DonationRequestsMadeByMe />
         </Grid>

@@ -28,7 +28,7 @@ const Navbar = () => {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-   const handleLogOut = () => {
+  const handleLogOut = () => {
     logoutUser(router);
   };
 
@@ -55,27 +55,27 @@ const Navbar = () => {
           <ListItemText primary="About Us" />
         </ListItem>
 
-        <ListItem component={Link} href="/dashboard">
-          <ListItemText primary="Dashboard" />
-        </ListItem>
+        {userInfo?.userId && (
+          <ListItem component={Link} href="/dashboard">
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+        )}
 
-        <>
+        {userInfo?.userId ? (
           <ListItem onClick={handleLogOut}>
             <ListItemText primary="Logout" />
           </ListItem>
-        </>
-
-        <ListItem component={Link} href="/login">
-          <ListItemText primary="Login" />
-        </ListItem>
+        ) : (
+          <ListItem component={Link} href="/login">
+            <ListItemText primary="Login" />
+          </ListItem>
+        )}
       </List>
     </Box>
   );
 
   return (
-    <Box
-      sx={{ bgcolor: "lightBlue", position: "sticky", top: 0, zIndex: 999 }}
-    >
+    <Box sx={{ bgcolor: "lightBlue", position: "sticky", top: 0, zIndex: 999 }}>
       <Container>
         <Stack
           py={2}
@@ -125,10 +125,10 @@ const Navbar = () => {
                   },
                 }}
               >
-              <Box component="span" color="red">
-               BlOOD 
-              </Box>
-              {" "} CARE
+                <Box component="span" color="red">
+                  BlOOD
+                </Box>{" "}
+                CARE
               </Typography>
             </Box>
           </Box>
@@ -144,41 +144,51 @@ const Navbar = () => {
               },
             }}
           >
-            <Typography component={Link} href="/" >
+            <Typography component={Link} href="/">
               Home
             </Typography>
-            <Typography component={Link} href="/donors" >
+            <Typography component={Link} href="/donors">
               Donors
             </Typography>
-            <Typography component={Link} href="/about" >
+            <Typography component={Link} href="/about">
               About Us
             </Typography>
-            <Typography component={Link} href="/dashboard" >
-              Dashboard
-            </Typography>
+            {userInfo?.userId && (
+              <Typography component={Link} href="/dashboard">
+                Dashboard
+              </Typography>
+            )}
           </Stack>
 
-          <Stack  
-            direction="row"
-            justifyContent="space-between"
-            gap={4}
-            sx={{
-              display: { xs: "none", md: "flex" },
-              marginRight: {
-                lg: 5,
-              },
-            }}>
-          <Button
-            component={Link}
-            href="/login"
-            sx={{ display: { xs: "none", md: "flex" } }}
-          >
-            Login
-          </Button>
-          <Button onClick={handleLogOut} color="error" sx={{ boxShadow: 0 }}>
-            Logout
-          </Button>
-          </Stack>
+          {userInfo?.userId ? (
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              gap={4}
+              sx={{
+                display: { xs: "none", md: "flex" },
+                marginRight: {
+                  lg: 5,
+                },
+              }}
+            >
+              <Button
+                onClick={handleLogOut}
+                color="error"
+                sx={{ boxShadow: 0 }}
+              >
+                Logout
+              </Button>
+            </Stack>
+          ) : (
+            <Button
+              component={Link}
+              href="/login"
+              sx={{ display: { xs: "none", md: "flex" } }}
+            >
+              Login
+            </Button>
+          )}
 
           <IconButton
             color="inherit"

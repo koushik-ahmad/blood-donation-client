@@ -1,16 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React, { useEffect, useState } from "react";
-import { FieldValues } from "react-hook-form";
-import { Button, Grid } from "@mui/material";
-import { useGetDonorQuery, useUpdateDonorByAdminMutation } from "@/redux/api/donorApi";
+import {
+  useGetDonorQuery,
+  useUpdateDonorByAdminMutation,
+} from "@/redux/api/donorApi";
 import PHForm from "@/components/Forms/PHForm";
-import PHModal from "@/components/Shared/PHModal/PHModal";
+import { FieldValues } from "react-hook-form";
+import { Box, Button, Grid } from "@mui/material";
 import PHSelectField from "@/components/Forms/PHSelectField";
 import { Role, UserStatus } from "@/types";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import PHModal from "@/components/Shared/PHModal/PHModal";
 
 type TProps = {
   open: boolean;
@@ -40,7 +43,7 @@ const UpdateDonorModal = ({ open, setOpen, id }: TProps) => {
       await refetch();
       setOpen(false);
     } catch (error) {
-      toast.error("Something went wrong!!!");
+      toast.error("Something went wrong!!! Please try again later");
       console.log(error);
     }
   };
@@ -48,8 +51,18 @@ const UpdateDonorModal = ({ open, setOpen, id }: TProps) => {
   return (
     <PHModal open={open} setOpen={setOpen} title="Update Donor">
       <PHForm onSubmit={submitHandler} resolver={zodResolver(validationSchema)}>
-        <Grid container spacing={2} sx={{ my: 5 }}>
-          <Grid item xs={12} sm={12} md={6}>
+         <Box pb={2}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              width: "100%",
+              maxWidth: "500px",
+              margin: "0 auto",
+            }}
+          >
+        <Grid container spacing={2} sx={{ my: 2 }}>
+          <Grid item xs={12} sm={12} md={12}>
             <PHSelectField
               items={Role}
               name="role"
@@ -58,7 +71,7 @@ const UpdateDonorModal = ({ open, setOpen, id }: TProps) => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={12}>
             <PHSelectField
               items={UserStatus}
               name="status"
@@ -68,10 +81,10 @@ const UpdateDonorModal = ({ open, setOpen, id }: TProps) => {
             />
           </Grid>
         </Grid>
-
-        <Button type="submit" disabled={updating}>
+        <Button type="submit" color="error" my={2} disabled={updating}>
           Update Donor
         </Button>
+        </Box>
       </PHForm>
     </PHModal>
   );

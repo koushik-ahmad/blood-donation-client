@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getFromLocalStorage } from "@/utils/local-storage";
-import { decodedToken } from "@/utils/jwt";
 import { authKey } from "@/constants/authKey";
 import { JwtPayload } from "jwt-decode";
+import { decodedToken } from "@/utils/jwt";
 
 const useUserInfo = (): any | string => {
   const [userInfo, setUserInfo] = useState<any | string>("");

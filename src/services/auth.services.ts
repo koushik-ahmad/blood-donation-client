@@ -40,7 +40,7 @@ export const removeUser = () => {
 
 export const getNewAccessToken = async () => {
   return await axiosInstance({
-    url: `${process.env.BACKEND_API_URL}/api/refresh-token`,
+    url: `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/refresh-token`,
     method: "POST",
     headers: { "Content-Type": "application/json" },
     withCredentials: true,

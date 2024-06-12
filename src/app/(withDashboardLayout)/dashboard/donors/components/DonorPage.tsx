@@ -7,24 +7,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, useEffect } from "react";
 import {
   useDeleteDonorMutation,
   useGetAllDonorsQuery,
 } from "@/redux/api/donorApi";
+import { useState, useEffect } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useDebounced } from "@/redux/hooks";
 import { toast } from "sonner";
+import { useDebounced } from "@/redux/hooks";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateDonorModal from "./UpdateDonorModal";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { MetaType } from "@/types";
+import Spinner from "@/components/UI/Spinner/Spinner";
+import ConfirmationModal from "./ConfirmationModal";
 
 const DonorPage = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedDonorId, setSelectedDonorId] = useState<string>("");
+
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [donorToDelete, setDonorToDelete] = useState<string | null>(null);
 
   // Pagination state
   const [page, setPage] = useState(1);
@@ -34,16 +39,6 @@ const DonorPage = () => {
     page,
     limit: pageSize,
   };
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const debouncedTerm = useDebounced({
-    searchQuery: searchTerm,
-    delay: 600,
-  });
-
-  if (!!debouncedTerm) {
-    query["searchTerm"] = searchTerm;
-  }
 
   const { data, isLoading } = useGetAllDonorsQuery({ ...query });
   const [deleteDonor] = useDeleteDonorMutation();
@@ -51,18 +46,19 @@ const DonorPage = () => {
   const donors = data?.donors || [];
   const meta: MetaType = data?.meta || {};
 
-  const handleDelete = async (id: string) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this request?"
-    );
-    if (!confirmed) return;
+  const handleDelete = async () => {
+    if (!donorToDelete) return;
+
     try {
-      const res = await deleteDonor(id).unwrap();
+      const res = await deleteDonor(donorToDelete).unwrap();
       if (res?.id) {
         toast.success("Donor deleted successfully!!!");
       }
     } catch (err: any) {
       console.error(err.message);
+    } finally {
+      setIsConfirmationModalOpen(false);
+      setDonorToDelete(null);
     }
   };
 
@@ -88,7 +84,10 @@ const DonorPage = () => {
         return (
           <Box>
             <IconButton
-              onClick={() => handleDelete(row.id)}
+              onClick={() => {
+                setDonorToDelete(row.id);
+                setIsConfirmationModalOpen(true);
+              }}
               aria-label="delete"
             >
               <DeleteIcon sx={{ color: "red" }} />
@@ -120,7 +119,7 @@ const DonorPage = () => {
         <Button
           key={i}
           onClick={() => handlePageChange(i)}
-          variant={i === page ? "contained" : "outlined"}
+          variant={i === page ? "outlined" : "outlined"}
         >
           {i}
         </Button>
@@ -137,25 +136,29 @@ const DonorPage = () => {
         setOpen={setIsUpdateModalOpen}
         id={selectedDonorId}
       />
+      <ConfirmationModal
+        open={isConfirmationModalOpen}
+        onClose={() => setIsConfirmationModalOpen(false)}
+        onConfirm={handleDelete}
+      />
       <Box>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
+        <Typography
+          variant="h4"
+          mt={4}
+          mb={2}
+          sx={{ textAlign: "center", fontSize: "30px" }}
         >
-          <TextField
-            onChange={(e) => setSearchTerm(e.target.value)}
-            size="small"
-            placeholder="Search Donors"
-          />
-        </Stack>
+          Donor Management Dashboard
+        </Typography>
+
         {!isLoading ? (
           <Box my={2}>
             <DataGrid rows={donors} columns={columns} hideFooter={true} />
           </Box>
         ) : (
-          <h1>Loading.....</h1>
+          <Spinner />
         )}
+
         <Box
           mt={2}
           display="flex"
@@ -164,7 +167,7 @@ const DonorPage = () => {
           flexWrap="wrap"
         >
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={() => handlePageChange(page - 1)}
             disabled={page === 1}
           >
@@ -172,7 +175,7 @@ const DonorPage = () => {
           </Button>
           {renderPageNumbers()}
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={() => handlePageChange(page + 1)}
             disabled={page === Math.ceil((meta?.total as number) / pageSize)}
           >

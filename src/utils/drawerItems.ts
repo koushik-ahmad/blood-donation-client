@@ -1,16 +1,15 @@
 import { USER_ROLE } from "@/constants/role";
 import { DrawerItem, UserRole } from "@/types";
 
-//icons
+// Icons
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import BloodtypeIcon from "@mui/icons-material/Bloodtype";
 import PersonIcon from "@mui/icons-material/Person";
 import KeyIcon from "@mui/icons-material/Key";
 
+// Function to generate drawer items based on role
 export const drawerItems = (role: UserRole): DrawerItem[] => {
-  const roleMenus: DrawerItem[] = [];
-
-  const defaultMenus = [
+  const defaultMenus: DrawerItem[] = [
     {
       title: "Profile",
       path: "profile",
@@ -23,48 +22,34 @@ export const drawerItems = (role: UserRole): DrawerItem[] => {
     },
   ];
 
-  switch (role) {
-    // case USER_ROLE.SUPER_ADMIN:
-    // roleMenus.push(
-    //   {
-    //     title: "Dashboard",
-    //     path: `${role}`,
-    //     icon: DashboardIcon,
-    //   },
-    //   {
-    //     title: "Manage Users",
-    //     path: `manage-users`,
-    //     icon: GroupIcon,
-    //   }
-    // );
-    // break;
+  // Role-specific menu items
+  const adminMenus: DrawerItem[] = [
+    {
+      title: "Dashboard",
+      path: "",
+      icon: DashboardIcon,
+    },
+    {
+      title: "Donors",
+      path: "donors",
+      icon: BloodtypeIcon,
+    },
+  ];
 
+  // User-specific menu items (if any)
+  const userMenus: DrawerItem[] = [
+    // Define user-specific menu items here
+  ];
+
+  // Return menu items based on role
+  switch (role) {
     case USER_ROLE.ADMIN:
-      roleMenus.push(
-        {
-          title: "Dashboard",
-          path: "donors",
-          icon: DashboardIcon,
-        },
-        {
-          title: "Donors",
-          path: "donors",
-          icon: BloodtypeIcon,
-        }
-      );
-      break;
+      return [...adminMenus, ...defaultMenus];
 
     case USER_ROLE.USER:
-      // roleMenus.push({
-      //   title: "Donors",
-      //   path: `donors`,
-      //   icon: MedicalInformationIcon,
-      // });
-      break;
+      return [...userMenus, ...defaultMenus];
 
     default:
-      break;
+      return defaultMenus;
   }
-
-  return [...roleMenus, ...defaultMenus];
 };
