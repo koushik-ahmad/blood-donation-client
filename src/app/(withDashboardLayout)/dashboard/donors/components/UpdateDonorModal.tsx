@@ -51,39 +51,44 @@ const UpdateDonorModal = ({ open, setOpen, id }: TProps) => {
   return (
     <PHModal open={open} setOpen={setOpen} title="Update Donor">
       <PHForm onSubmit={submitHandler} resolver={zodResolver(validationSchema)}>
-         <Box pb={2}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              width: "100%",
-              maxWidth: "500px",
-              margin: "0 auto",
-            }}
+        <Box
+          pb={2}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            width: "100%",
+            maxWidth: "500px",
+            margin: "0 auto",
+          }}
+        >
+          <Grid container spacing={2} sx={{ my: 2 }}>
+            <Grid item xs={12} sm={12} md={12}>
+              <PHSelectField
+                items={Role}
+                name="role"
+                label="User Role"
+                sx={{ mb: 2 }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <PHSelectField
+                items={UserStatus}
+                name="status"
+                label="User Status"
+                sx={{ mb: 2 }}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            color="error"
+            disabled={updating}
           >
-        <Grid container spacing={2} sx={{ my: 2 }}>
-          <Grid item xs={12} sm={12} md={12}>
-            <PHSelectField
-              items={Role}
-              name="role"
-              label="User Role"
-              sx={{ mb: 2 }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={12} md={12}>
-            <PHSelectField
-              items={UserStatus}
-              name="status"
-              label="User Status"
-              sx={{ mb: 2 }}
-              fullWidth
-            />
-          </Grid>
-        </Grid>
-        <Button type="submit" color="error" my={2} disabled={updating}>
-          Update Donor
-        </Button>
+            Update Donor
+          </Button>
         </Box>
       </PHForm>
     </PHModal>

@@ -106,7 +106,7 @@ const HeroSection = () => {
           </Box>
           <Typography variant="body1" color="white" sx={{ mb: 4 }}>
            Donating blood is a simple act of kindness that can save lives. Your donation can help patients undergoing surgeries, 
-           cancer treatments, and those with chronic illnesses. By giving blood, you're making a significant impact on someone's life and health.
+           cancer treatments, and those with chronic illnesses. By giving blood, you making a significant impact on someone life and health.
           </Typography>
           <Box
             sx={{

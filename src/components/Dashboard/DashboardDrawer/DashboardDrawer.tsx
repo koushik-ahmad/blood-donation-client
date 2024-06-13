@@ -97,7 +97,7 @@ export default function DashboardDrawer({
                   textWrap: "wrap",
                 }}
               >
-                <Link component={Link} href="/" >
+                <Link href="/" >
                 <Box component="span" color="red">
                   BlOOD
                 </Box>{" "}
