@@ -38,9 +38,6 @@ const DonorCard = ({ donor }: any) => {
         <Typography gutterBottom component="p">
           Status: {donor?.status}
         </Typography>
-         {/* <Typography gutterBottom component="p" color={donor.availability ? "green" : "red"}>
-          Blood: {donor.availability ? "Available" : "Not Available"}
-        </Typography> */}
       </CardContent>
       <CardActions>
         <Button color="error" size="small" component={Link} href={`/donors/${donor.id}`}>

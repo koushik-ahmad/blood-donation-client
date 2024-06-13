@@ -31,7 +31,7 @@ export const donorApi = baseApi.injectEndpoints({
     deleteDonor: build.mutation({
       query: (id) => ({
         url: `/donor/${id}`,
-        method: "DELETE",
+        method: "PUT",
       }),
       invalidatesTags: [tagTypes.user],
     }),

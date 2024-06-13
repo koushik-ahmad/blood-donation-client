@@ -28,12 +28,12 @@ const DonationRequestsMadeByMe = () => {
   const { data, isLoading } = useDonationRequestsMadeByMeQuery({});
   const [deleteMyRequest] = useDeleteMyRequestMutation();
 
-
   const handleOpenModal = (id: string) => {
     setSelectedId(id);
     setIsModalOpen(true);
   };
 
+  // modal delete
   const handleOpenConfirmModal = (id: string) => {
     setSelectedId(id);
     setIsConfirmModalOpen(true);
@@ -53,6 +53,7 @@ const DonationRequestsMadeByMe = () => {
         handleCloseConfirmModal();
       }
     } catch (error) {
+      console.error(error);
       toast.error("Failed to delete request");
     }
   };

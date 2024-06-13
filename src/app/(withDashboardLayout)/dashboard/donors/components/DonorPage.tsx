@@ -22,14 +22,16 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { MetaType } from "@/types";
 import Spinner from "@/components/UI/Spinner/Spinner";
-import ConfirmationModal from "./ConfirmationModal";
+// import ConfirmationModal from "./ConfirmationModal";
+import ConfirmDeleteModal from "../../profile/components/ConfirmDeleteModal";
 
 const DonorPage = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedDonorId, setSelectedDonorId] = useState<string>("");
 
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [donorToDelete, setDonorToDelete] = useState<string | null>(null);
+  // modal
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // Pagination state
   const [page, setPage] = useState(1);
@@ -46,19 +48,28 @@ const DonorPage = () => {
   const donors = data?.donors || [];
   const meta: MetaType = data?.meta || {};
 
-  const handleDelete = async () => {
-    if (!donorToDelete) return;
+  // model delete
+  const handleOpenConfirmModal = (id: string) => {
+    setSelectedId(id);
+    setIsConfirmModalOpen(true);
+  };
 
+  const handleCloseConfirmModal = () => {
+    setIsConfirmModalOpen(false);
+    setSelectedId(null);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!id) return;
     try {
-      const res = await deleteDonor(donorToDelete).unwrap();
-      if (res?.id) {
+      const result = await deleteDonor(id);
+      if (result) {
         toast.success("Donor deleted successfully!!!");
+        handleCloseConfirmModal();
       }
-    } catch (err: any) {
-      console.error(err.message);
-    } finally {
-      setIsConfirmationModalOpen(false);
-      setDonorToDelete(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete donor");
     }
   };
 
@@ -85,8 +96,8 @@ const DonorPage = () => {
           <Box>
             <IconButton
               onClick={() => {
-                setDonorToDelete(row.id);
-                setIsConfirmationModalOpen(true);
+                handleOpenConfirmModal(row.id);
+                // setIsConfirmationModalOpen(true);
               }}
               aria-label="delete"
             >
@@ -136,10 +147,11 @@ const DonorPage = () => {
         setOpen={setIsUpdateModalOpen}
         id={selectedDonorId}
       />
-      <ConfirmationModal
-        open={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
-        onConfirm={handleDelete}
+      <ConfirmDeleteModal
+        open={isConfirmModalOpen}
+        handleClose={handleCloseConfirmModal}
+        handleConfirm={handleDelete}
+        id={selectedId}
       />
       <Box>
         <Typography
