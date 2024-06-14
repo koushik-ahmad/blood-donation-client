@@ -12,7 +12,7 @@ Welcome to the backend repository of our Blood Donation Application, an online p
 
 ### Overview Video:
 
-[Overview video Url]()
+[Overview video url]()
 
 ## Technology Stack
 
@@ -43,7 +43,7 @@ Welcome to the backend repository of our Blood Donation Application, an online p
 Before you begin, ensure you have met the following requirements:
 
 - Node.js installed on your machine. You can download it [here](https://nodejs.org/).
-- Next.js installed on your machine. download it [here](https://nextjs.org/).
+- Next.js installed on your machine. install it [here](https://nextjs.org/).
 
 ### Installation
 

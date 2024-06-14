@@ -81,7 +81,10 @@ const DonorPage = () => {
         return (
           <Box>
             <IconButton
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setSelectedDonorId(row.id);  
+                setIsModalOpen(true);  
+              }}
               aria-label="delete"
             >
               <DeleteIcon sx={{ color: "red" }} />
