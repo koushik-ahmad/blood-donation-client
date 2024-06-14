@@ -27,7 +27,7 @@ const PHDatePicker = ({
     <Controller
       name={name}
       control={control}
-      defaultValue={dayjs(new Date().toDateString())}
+      defaultValue={null}
       render={({ field: { onChange, value, ...field } }) => {
         return (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -37,7 +37,7 @@ const PHDatePicker = ({
               // disablePast
               {...field}
               onChange={(date: any) => onChange(date)}
-              value={value || Date.now()}
+              value={value ? dayjs(value) : null}
               slotProps={{
                 textField: {
                   required: required,

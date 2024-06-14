@@ -22,16 +22,13 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { MetaType } from "@/types";
 import Spinner from "@/components/UI/Spinner/Spinner";
-// import ConfirmationModal from "./ConfirmationModal";
-import ConfirmDeleteModal from "../../profile/components/ConfirmDeleteModal";
+import ConfirmationModal from "./ConfirmationModal";
+
 
 const DonorPage = () => {
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedDonorId, setSelectedDonorId] = useState<string>("");
-
-  // modal
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+   const [selectedDonorId, setSelectedDonorId] = useState<string>("");
 
   // Pagination state
   const [page, setPage] = useState(1);
@@ -42,40 +39,29 @@ const DonorPage = () => {
     limit: pageSize,
   };
 
-  const { data, isLoading } = useGetAllDonorsQuery({ ...query });
+  const { data, isLoading, refetch } = useGetAllDonorsQuery({ ...query });
   const [deleteDonor] = useDeleteDonorMutation();
 
   const donors = data?.donors || [];
   const meta: MetaType = data?.meta || {};
 
-  // model delete
-  const handleOpenConfirmModal = (id: string) => {
-    setSelectedId(id);
-    setIsConfirmModalOpen(true);
-  };
-
-  const handleCloseConfirmModal = () => {
-    setIsConfirmModalOpen(false);
-    setSelectedId(null);
-  };
 
   const handleDelete = async (id: string) => {
-    if (!id) return;
+
     try {
-      const result = await deleteDonor(id);
-      if (result) {
-        toast.success("Donor deleted successfully!!!");
-        handleCloseConfirmModal();
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete donor");
+      await deleteDonor(id).unwrap();
+      toast.success("Donor deleted successfully!");
+      refetch();
+    } catch (err: any) {
+      console.error(err.message);
+      toast.error("Something went wrong!");
     }
   };
 
-  const handlePageChange = (newPage: number) => {
+   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
+ 
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", flex: 1 },
@@ -95,10 +81,7 @@ const DonorPage = () => {
         return (
           <Box>
             <IconButton
-              onClick={() => {
-                handleOpenConfirmModal(row.id);
-                // setIsConfirmationModalOpen(true);
-              }}
+              onClick={() => setIsModalOpen(true)}
               aria-label="delete"
             >
               <DeleteIcon sx={{ color: "red" }} />
@@ -147,11 +130,13 @@ const DonorPage = () => {
         setOpen={setIsUpdateModalOpen}
         id={selectedDonorId}
       />
-      <ConfirmDeleteModal
-        open={isConfirmModalOpen}
-        handleClose={handleCloseConfirmModal}
-        handleConfirm={handleDelete}
-        id={selectedId}
+       <ConfirmationModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => {
+          handleDelete(selectedDonorId);
+          setIsModalOpen(false);
+        }}
       />
       <Box>
         <Typography

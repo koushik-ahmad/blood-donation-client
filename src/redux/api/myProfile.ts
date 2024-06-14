@@ -12,7 +12,7 @@ export const profileAPi = baseApi.injectEndpoints({
       },
       providesTags: [tagTypes.user],
     }),
-    
+
     getMyDonationRequestsMadeByUser: build.query({
       query: () => {
         return {
@@ -47,7 +47,7 @@ export const profileAPi = baseApi.injectEndpoints({
     updateProfilePicture: build.mutation({
       query: (values) => {
         return {
-          url: "/update-profile-picture",
+          url: "/update-profile-photo",
           method: "POST",
           data: values,
         };

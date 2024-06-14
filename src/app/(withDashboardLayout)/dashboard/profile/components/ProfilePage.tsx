@@ -13,7 +13,6 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { toast } from "sonner";
 import avatar from "@/assets/images/avatar.png";
-import DashedLine from "@/components/UI/Donor/DashedLine";
 import ProfileUpdateModal from "./ProfileUpdateModal";
 import DonorInformation from "./DonorInformations";
 import MyDonationRequests from "./MyDonationRequests";
@@ -24,10 +23,11 @@ import Spinner from "@/components/UI/Spinner/Spinner";
 const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isLoading } = useGetMYProfileQuery(undefined);
+  const { data, isLoading, refetch } = useGetMYProfileQuery(undefined);
 
-  const [updateProfilePicture, { isLoading: updating }] =
-    useUpdateProfilePictureMutation();
+  // console.log(data);
+
+  const [updateProfilePicture, { isLoading: updating }] = useUpdateProfilePictureMutation();
 
   const fileUploadHandler = (file: File) => {
     const imgBBLink = "7b9639cdc6a2cd14a6d5cbbaaf7a0c5c";
@@ -42,21 +42,26 @@ const ProfilePage = () => {
       .then((result) => {
         if (result.success) {
           const image = result.data.url;
+          // console.log("image:", image);
+
           const profileUpdate = {
             id: data?.id,
             profilePicture: image,
           };
+          
           updateProfilePicture(profileUpdate)
             .then((resolvedValue) => {
-              console.log("resolvedValue = ", resolvedValue);
               toast.success("Picture uploaded successfully");
+              refetch();
             })
             .catch((error) => {
+              console.log(error);
               toast.error("Failed to upload the picture!");
             });
         }
       });
   };
+
 
   useEffect(() => {
     if (isLoading) {
@@ -107,11 +112,11 @@ const ProfilePage = () => {
           }}
         >
           <Image
-            height={250}
+            height={100}
             width={200}
             src={data?.profilePicture ? data?.profilePicture : avatar}
             alt="User Photo"
-            style={{ borderRadius: "50%", objectFit: "cover" }}
+            style={{ borderRadius: "50%",  border: "4px solid red" }}
           />
 
           <Box gap={2} sx={{ marginTop: "1rem", textAlign: "center" }}>

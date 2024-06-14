@@ -58,7 +58,7 @@ const DonorDetailsCard = ({ donor }: any) => {
               alt="profile Image"
               width={150}
               height={200}
-              style={{ borderRadius: "50%", objectFit: "cover" }}
+              style={{ borderRadius: "50%", border: "4px solid red" }}
             />
           </Box>
 

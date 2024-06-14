@@ -131,6 +131,8 @@ const ProfileUpdateModal = ({ open, setOpen, id }: TProps) => {
               fullWidth
             />
           </Grid>
+          {/* image upload  */}
+          
         </Grid>
 
         <Button type="submit" fullWidth disabled={updating}>

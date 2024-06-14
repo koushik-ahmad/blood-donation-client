@@ -28,14 +28,6 @@ export const donorApi = baseApi.injectEndpoints({
       providesTags: [tagTypes.user],
     }),
 
-    deleteDonor: build.mutation({
-      query: (id) => ({
-        url: `/donor/${id}`,
-        method: "PUT",
-      }),
-      invalidatesTags: [tagTypes.user],
-    }),
-
     //get single donor
     getDonor: build.query({
       query: (id: string | string[] | undefined) => ({
@@ -54,6 +46,15 @@ export const donorApi = baseApi.injectEndpoints({
           data,
         };
       },
+      invalidatesTags: [tagTypes.user],
+    }),
+
+    // delete donor
+    deleteDonor: build.mutation({
+      query: (id) => ({
+        url: `/donor/${id}`,
+        method: "PUT",
+      }),
       invalidatesTags: [tagTypes.user],
     }),
 

@@ -58,7 +58,7 @@ export default function AccountMenu() {
 
   return (
     <React.Fragment>
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center", borderRadius: "50%", border: "1px solid blue" }}>
         <Tooltip
           title="Account settings"
           componentsProps={{

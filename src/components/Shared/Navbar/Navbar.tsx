@@ -22,14 +22,17 @@ import logo from "@/assets/icons/logo2.png";
 import { useState } from "react";
 import { logoutUser } from "@/services/actions/logoutUser";
 import useUserInfo from "@/hooks/useUserInfo";
+import { authKey } from "@/constants/authKey";
 
 const Navbar = () => {
   const userInfo = useUserInfo();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleLogOut = () => {
-    logoutUser(router);
+  const handleLogOut = async () => {
+    await logoutUser(router);
+    window.localStorage.removeItem(authKey); // Remove the auth token
+    window.dispatchEvent(new Event("storage")); // Trigger a storage event
   };
 
   const handleDrawerToggle = () => {
@@ -62,11 +65,11 @@ const Navbar = () => {
         )}
 
         {userInfo?.userId ? (
-          <ListItem onClick={handleLogOut}>
+          <ListItem button onClick={handleLogOut}>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
-          <ListItem component={Link} href="/login">
+          <ListItem button component={Link} href="/login">
             <ListItemText primary="Login" />
           </ListItem>
         )}

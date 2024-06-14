@@ -109,6 +109,7 @@ export default function DashboardDrawer({
               <Avatar
                 alt={data?.name}
                 src={data?.profilePicture ? data?.profilePicture : avatar}
+                style={{ border: "1px solid red" }}
               />
               <AccountMenu />
             </Stack>

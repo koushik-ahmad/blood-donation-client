@@ -27,6 +27,17 @@ const useUserInfo = (): any | string => {
     };
 
     fetchUserInfo();
+
+    const handleStorageChange = () => {
+      fetchUserInfo();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+
   }, []);
 
   return userInfo;

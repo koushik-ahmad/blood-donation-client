@@ -97,6 +97,7 @@ const MyDonationRequests = () => {
                 >
                   <Button
                     fullWidth
+                    variant="outlined"
                     endIcon={<ModeEditIcon />}
                     onClick={() => handleOpenModal(item?.id)}
                   >

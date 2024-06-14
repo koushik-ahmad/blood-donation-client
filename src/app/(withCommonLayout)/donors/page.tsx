@@ -14,7 +14,7 @@ import {
 import { useGetAllDonorsQuery } from "@/redux/api/donorApi";
 import React, { useState, useEffect } from "react";
 import DonorCard from "@/components/UI/Donor/DonorCard";
-import { IDonor } from "@/types";
+import { IDonor, MetaType } from "@/types";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Spinner from "@/components/UI/Spinner/Spinner";
@@ -27,8 +27,15 @@ const BloodDonors: React.FC = () => {
 
   // pagination
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(8);
-  const { data, isLoading, error } = useGetAllDonorsQuery({});
+  const [pageSize, setPageSize] = useState(8);
+
+  const { data, isLoading, error } = useGetAllDonorsQuery({
+    page,
+    limit: pageSize,
+  });
+
+  const donors = data?.donors || [];
+  const meta: MetaType = data?.meta || {};
 
   useEffect(() => {
     if (data && data?.donors) {
@@ -53,11 +60,29 @@ const BloodDonors: React.FC = () => {
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
+  
 
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedDonors = filteredDonors.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredDonors.length / pageSize);
+  const renderPageNumbers = () => {
+    if (!meta || !("total" in meta)) {
+      return null;
+    }
+    const totalPages = Math.ceil(((meta?.total || 0) as number) / pageSize);
+    const pageNumbers = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <Button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          variant={i === page ? "outlined" : "outlined"}
+        >
+          {i}
+        </Button>
+      );
+    }
+
+    return pageNumbers;
+  };
 
   if (isLoading) {
     return (
@@ -187,16 +212,15 @@ const BloodDonors: React.FC = () => {
             borderRadius: 8,
           }}
         >
-          {paginatedDonors?.map((donor) => (
+           {filteredDonors.length > 0 ? filteredDonors.map((donor) => (
             <DonorCard key={donor.id} donor={donor} />
-          ))}
+          )) : (
+            <Box sx={{ textAlign: "center", my: 10, color: "red" }}>
+              <Typography variant="h5">No Donors Found.</Typography>
+              <Typography>Please, try again!</Typography>
+            </Box>
+          )}
         </Box>
-        {paginatedDonors?.length === 0 && (
-          <Box sx={{ textAlign: "center", my: 10, color: "red" }}>
-            <Typography variant="h5">No Donors Found.</Typography>
-            <Typography>Please, try again!</Typography>
-          </Box>
-        )}
         <Box
           my={5}
           display="flex"
@@ -211,19 +235,11 @@ const BloodDonors: React.FC = () => {
           >
             <ArrowBackIosIcon />
           </Button>
-          {[...Array(totalPages)].map((_, index) => (
-            <Button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              variant={index + 1 === page ? "outlined" : "outlined"}
-            >
-              {index + 1}
-            </Button>
-          ))}
+          {renderPageNumbers()}
           <Button
             variant="outlined"
             onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
+            disabled={page === Math.ceil((meta?.total || 0) / pageSize)}
           >
             <ArrowForwardIosIcon />
           </Button>

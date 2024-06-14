@@ -2,7 +2,9 @@ import DonorCard from "../../Donor/DonorCard";
 import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 
 const TopDonors = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/donor-list`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/donor-list`
+  );
 
   const { data } = await res.json();
 
@@ -43,7 +45,7 @@ const TopDonors = async () => {
         }}
       >
         <Grid container spacing={3}>
-          {data?.slice(0, 3).map((donor: any, index: number) => (
+          {data?.slice(2, 5).map((donor: any, index: number) => (
             <Grid item xs={12} sm={6} md={4} key={donor.id}>
               <DonorCard donor={donor} />
             </Grid>

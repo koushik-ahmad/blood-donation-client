@@ -22,43 +22,47 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BloodGroups } from "@/types";
 import { z } from "zod";
-import defaultValues from "./page";
 import PHForm from "@/components/Forms/PHForm";
 import PHInput from "@/components/Forms/PHInput";
 import PHSelectField from "@/components/Forms/PHSelectField";
 import PHDatePicker from "@/components/Forms/PHDatePicker";
+import dayjs from "dayjs";
 
-// const registerFormSchema = z.object({
-//   name: z.string({ required_error: "Name is required" }),
-//   email: z.string({ required_error: "Email is required" }).email({ message: "Invalid Email" }),
-//   password: z
-//     .string({ required_error: "Password is required" })
-//     .min(6, { message: "Password must be at least 6 characters" }),
-//   confirmPassword: z
-//     .string({ required_error: "Please type your password again" })
-//     .min(6, "Your password should be minimum 6 characters"),
-//   bloodType: z
-//     .string({ required_error: "Blood type is required" })
-//     .optional(),
-//   location: z.string({ required_error: "Location is required" }),
-//   bio: z.string({ required_error: "Bio is required" }),
-//   contactNumber: z.string({ required_error: "Phone Number is required" }),
-//   age: z.string({ required_error: "Age is required" }),
-//   lastDonationDate: z
-//     .any({ required_error: "Last donation date is required" })
-//     .optional(),
-// });
+const registerFormSchema = z.object({
+  name: z.string({ required_error: "Name is required" }),
+  email: z
+    .string({ required_error: "Email is required" })
+    .email({ message: "Invalid Email" }),
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(6, { message: "Password must be at least 6 characters" }),
+  confirmPassword: z
+    .string({ required_error: "Please type your password again" })
+    .min(6, { message: "Password must be at least 6 characters" }),
+  bloodType: z.string({ required_error: "Blood type is required" }).optional(),
+  location: z.string({ required_error: "Location is required" }),
+  bio: z.string({ required_error: "Bio is required" }),
+  contactNumber: z.string({ required_error: "Phone Number is required" }),
+  age: z.string({ required_error: "Age is required" }),
+  lastDonationDate: z
+    .any({ required_error: "Last donation date is required" })
+    .refine(
+      (val) => {
+        return typeof dayjs(val).format("DD-MM-YYYY") === "string";
+      },
+      {
+        message: "Please Provide a valid date",
+      }
+    )
+    .optional(),
+});
 
 const RegisterPage = () => {
+  const router = useRouter();
   // const [error, setError] = useState("");
   // const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
 
   const handleRegister = async (values: any) => {
-    // const data = modifyPayload(values);
-    // console.log(values);
-
     const password = values.password;
     const confirmPassword = values.confirmPassword;
 
@@ -69,17 +73,18 @@ const RegisterPage = () => {
     const modifiedValues = {
       ...values,
       age: parseInt(values.age),
+      lastDonationDate: dayjs(values.lastDonationDate).format("DD-MM-YYYY")
     };
 
-    console.log(modifiedValues)
+    // console.log(modifiedValues);
 
-     try {
+    try {
       const res = await registerUser(modifiedValues);
-      console.log(res);
+      console.log("res", res);
 
-      if(res.success === false){
+      if (res.success === false) {
         toast.error("validation error");
-      };
+      }
 
       if (res?.data?.id) {
         toast.success(res?.message);
@@ -94,22 +99,22 @@ const RegisterPage = () => {
       }
     } catch (err: any) {
       toast.error("Validation Error!!");
-      console.error(err);
+      console.error("Error during registration: ", err);
     }
   };
 
-  // const defaultValues = {
-  //   name: "",
-  //   email: "",
-  //   password: "",
-  //   confirmPassword: "",
-  //   bloodType: "",
-  //   location: "",
-  //   bio: "",
-  //   contactNumber: "",
-  //   age: "",
-  //   lastDonationDate: "",
-  // };
+  const defaultValues = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    bloodType: "",
+    location: "",
+    bio: "",
+    contactNumber: "",
+    age: "",
+    lastDonationDate: "",
+  };
 
   return (
     <Container>
@@ -149,8 +154,8 @@ const RegisterPage = () => {
           <Box>
             <PHForm
               onSubmit={handleRegister}
-              // resolver={zodResolver(registerFormSchema)}
-              // defaultValues={defaultValues}
+              defaultValues={defaultValues}
+              resolver={zodResolver(registerFormSchema)}
             >
               <Grid container spacing={2} my={1}>
                 <Grid item md={12}>
@@ -197,7 +202,12 @@ const RegisterPage = () => {
                   <PHInput label="Bio" fullWidth={true} name="bio" />
                 </Grid>
                 <Grid item md={6}>
-                  <PHInput label="Phone" type="tel" fullWidth={true} name="contactNumber" />
+                  <PHInput
+                    label="Phone"
+                    type="tel"
+                    fullWidth={true}
+                    name="contactNumber"
+                  />
                 </Grid>
                 <Grid item md={6}>
                   <PHInput label="Age" fullWidth={true} name="age" />
