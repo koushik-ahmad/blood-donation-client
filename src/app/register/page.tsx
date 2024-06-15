@@ -83,7 +83,7 @@ const RegisterPage = () => {
       console.log("res", res);
 
       if (res.success === false) {
-        toast.error("validation error");
+        toast.error(res.message);
       }
 
       if (res?.data?.id) {
